@@ -1,0 +1,13 @@
+<tui-input #tuiIn style="text-align: center" [formControl]="tickerSearchQuery">
+  Enter a ticker symbol to get started
+  <!--(keydown.enter)="tuiIn.nativeFocusableElement?.blur()"-->
+
+  @let filteredItems = allTickers | tuiFilterByInput;
+  <tui-data-list-wrapper
+    (itemClick)="onDropdownItemClick($event)"
+    *tuiDataList
+    emptyContent="No results found"
+    size="l"
+    [items]="filteredItems"
+  />
+</tui-input>

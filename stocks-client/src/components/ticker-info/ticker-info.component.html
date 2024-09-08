@@ -1,0 +1,7 @@
+<h3 style="cursor: pointer" (click)="router.navigateByUrl('/')">Home</h3>
+
+@if (ticker) {
+  <app-chart [ticker]="ticker"></app-chart>
+} @else {
+  <div style="color: red">Error: No ticker provided</div>
+}

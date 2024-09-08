@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 // Angular Chart Component
 import { AgCharts } from 'ag-charts-angular';
 // Chart Options Type Interface
@@ -14,7 +14,7 @@ import { BackendService } from '../../services/backend.service';
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnChanges {
   // Chart Options
 
   baseChartOptions: AgChartOptions = {
@@ -53,13 +53,16 @@ export class ChartComponent implements OnInit {
   };
   chartOptions: AgChartOptions | null = null;
 
+  @Input() ticker: string | null = null;
+  startDate: number = DateTime.now().startOf('day').minus({ month: 1 }).toMillis();
+  endDate: number = DateTime.now().startOf('day').toMillis();
+
   constructor(private backendService: BackendService) {}
 
-  ngOnInit(): void {
-    const startDate = DateTime.now().startOf('day').minus({ month: 1 }).toMillis();
-    const endDate = DateTime.now().startOf('day').toMillis();
-
-    this.backendService.getRandomTimeSeries(startDate, endDate).subscribe((res) => {
+  ngOnChanges(changes: SimpleChanges): void {
+    const ticker = changes['ticker'].currentValue;
+    if (!ticker) return;
+    this.backendService.getRandomTimeSeries(this.startDate, this.endDate).subscribe((res) => {
       this.chartOptions = {
         ...this.baseChartOptions,
         data: res,

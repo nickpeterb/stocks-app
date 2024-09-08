@@ -1,5 +1,6 @@
 <div style="display: grid; width: 100%; height: 100%">
   @if (chartOptions) {
-  <ag-charts [options]="chartOptions"></ag-charts>
+    {{ ticker }}
+    <ag-charts [options]="chartOptions"></ag-charts>
   }
 </div>

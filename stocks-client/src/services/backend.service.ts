@@ -1,10 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-interface TimeSeriesPoint {
-  date: number;
-  value: number;
-}
+import { TimeSeriesPoint } from '../models/time-series.types';
 
 @Injectable({
   providedIn: 'root',
