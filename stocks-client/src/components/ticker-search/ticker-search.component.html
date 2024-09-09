@@ -1,13 +1,34 @@
-<tui-input #tuiIn style="text-align: center" [formControl]="tickerSearchQuery">
-  Enter a ticker symbol to get started
-  <!--(keydown.enter)="tuiIn.nativeFocusableElement?.blur()"-->
+<tui-combo-box
+  [stringify]="stringify"
+  [formControl]="selectedTicker"
+  [tuiTextfieldLabelOutside]="true"
+  [valueContent]="value"
+  [(search)]="tickerSearchQuery"
+  *tuiLet="items$ | async as filtered"
+>
+  Search for a ticker symbol
+  <input tuiTextfieldLegacy (input)="searchStocks(tickerSearchQuery)" />
+  <ng-template #value let-item>
+    <span class="name">{{ stringify(item) }}</span>
+  </ng-template>
+  <ng-template tuiDataList>
+    @if (filtered) {
+      <tui-data-list
+        [emptyContent]="filtered.length === 0 ? (tickerSearchQuery.length > 0 ? loading : 'Start typing...') : null"
+      >
+        @for (item of filtered; track $index) {
+          <button tuiOption [value]="item">
+            <div>
+              <div class="name">{{ item.symbol }}</div>
+              <div class="name">{{ item.name }}</div>
+            </div>
+          </button>
+        }
+      </tui-data-list>
+    }
+  </ng-template>
+</tui-combo-box>
 
-  @let filteredItems = allTickers | tuiFilterByInput;
-  <tui-data-list-wrapper
-    (itemClick)="onDropdownItemClick($event)"
-    *tuiDataList
-    emptyContent="No results found"
-    size="l"
-    [items]="filteredItems"
-  />
-</tui-input>
+<ng-template #loading>
+  <tui-loader class="tui-space_vertical-4" />
+</ng-template>

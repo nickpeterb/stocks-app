@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TickerSearchComponent } from '../ticker-search/ticker-search.component';
 import { Router } from '@angular/router';
+import { TwelveStockInfo } from '../../models/twelve-data.types';
 
 @Component({
   selector: 'app-welcome',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class WelcomeComponent {
   constructor(private router: Router) {}
 
-  onTickerSelection(ticker: string) {
-    this.router.navigate(['ticker', ticker]);
+  onTickerSelection(ticker: TwelveStockInfo) {
+    this.router.navigate(['ticker', ticker.symbol]);
   }
 }

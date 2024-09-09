@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TimeSeriesPoint } from '../models/time-series.types';
+import { TimeSeriesInterval, TimeSeriesPoint } from '../models/time-series.types';
+import { TwelveStockInfo } from '../models/twelve-data.types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,22 @@ export class BackendService {
 
   constructor(private http: HttpClient) {}
 
+  getStockList(tickerFilter: string) {
+    const options = {
+      params: new HttpParams({
+        fromObject: {
+          ticker: tickerFilter,
+        },
+      }),
+    };
+    return this.http.get<TwelveStockInfo[]>(this.API_URL + '/stocks', options);
+  }
+
   getRandomTimeSeries(
     startDate: number,
     endDate: number,
     startPrice: number = Math.random() * (200 - 100) + 100,
-    interval: 'day' | 'week' | 'year' = 'day'
+    interval: TimeSeriesInterval = 'day'
   ) {
     const options = {
       params: new HttpParams({

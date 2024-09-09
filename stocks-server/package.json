@@ -2,8 +2,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "npx nodemon app.js"
+    "start": "node --env-file=.env app.js",
+    "dev": "npx nodemon --env-file=.env app.js"
   },
   "dependencies": {
     "@types/express": "^4.17.21",
