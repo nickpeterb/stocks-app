@@ -1,4 +1,20 @@
-<tui-root>
+<tui-root [attr.tuiTheme]="theme$ | async">
+  <div style="display: flex; padding: 1rem">
+    <div style="font-size: 1.5rem; font-weight: bold">Stocks App</div>
+    <div style="flex-grow: 1"></div>
+    <div>
+      @let icon = (theme$ | async) === "light" ? "@tui.moon" : "@tui.sun";
+      <button
+        appearance="outline"
+        [iconStart]="icon"
+        size="s"
+        tuiIconButton
+        type="button"
+        [style.border-radius.%]="100"
+        (click)="toggleTheme()"
+      ></button>
+    </div>
+  </div>
   <div id="main-content">
     <router-outlet />
   </div>
