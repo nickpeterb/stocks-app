@@ -6,6 +6,8 @@ import { AgChartOptions } from 'ag-charts-community';
 
 import { DateTime } from 'luxon';
 import { BackendService } from '../../services/backend.service';
+import { ThemeService } from '../../services/theme.service';
+import { TimeSeriesInterval } from '../../models/time-series.types';
 
 @Component({
   selector: 'app-chart',
@@ -15,15 +17,14 @@ import { BackendService } from '../../services/backend.service';
   styleUrl: './chart.component.scss',
 })
 export class ChartComponent implements OnChanges {
-  // Chart Options
-
   baseChartOptions: AgChartOptions = {
-    // Series: Defines which chart type and data to use
+    theme: 'ag-default',
+    background: { visible: false },
     series: [
       {
         type: 'line',
-        xKey: 'date',
-        yKey: 'value',
+        xKey: 'datetime',
+        yKey: 'close',
         yName: 'Price',
         interpolation: {
           type: 'smooth',
@@ -34,19 +35,18 @@ export class ChartComponent implements OnChanges {
       {
         type: 'time',
         position: 'bottom',
-        title: { text: 'Date' },
-        label: {
-          formatter: function (params: any) {
-            const date = new Date(params.value); // Convert milliseconds to Date object
-            return date.toLocaleDateString(); // Format as 'MM/DD/YYYY' or localized format
-          },
-        },
+        // label: {
+        //   formatter: function (params: any) {
+        //     const date = new Date(params.value); // Convert milliseconds to Date object
+        //     return date.toLocaleDateString(); // Format as 'MM/DD/YYYY' or localized format
+        //   },
+        // },
         nice: true,
       },
       {
         type: 'number',
         position: 'left',
-        title: { text: 'Value' },
+        // title: { text: 'Price' },
         nice: true,
       },
     ],
@@ -54,18 +54,35 @@ export class ChartComponent implements OnChanges {
   chartOptions: AgChartOptions | null = null;
 
   @Input() ticker: string | null = null;
-  startDate: number = DateTime.now().startOf('day').minus({ month: 1 }).toMillis();
-  endDate: number = DateTime.now().startOf('day').toMillis();
+  @Input() interval: TimeSeriesInterval | null = null;
 
-  constructor(private backendService: BackendService) {}
+  constructor(
+    private backendService: BackendService,
+    private themeService: ThemeService
+  ) {
+    this.themeService.theme$.subscribe((newTheme) => {
+      const agTheme = newTheme === 'light' ? 'ag-default' : 'ag-default-dark';
+      this.baseChartOptions.theme = agTheme;
+      this.chartOptions = {
+        ...this.chartOptions,
+        theme: agTheme,
+      };
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const ticker = changes['ticker'].currentValue;
-    if (!ticker) return;
-    this.backendService.getRandomTimeSeries(this.startDate, this.endDate).subscribe((res) => {
+    const ticker = changes['ticker']?.currentValue ?? this.ticker;
+    const interval = changes['interval']?.currentValue ?? this.interval;
+    if (!ticker || !interval) return;
+
+    this.backendService.getStockTimeSeries(ticker, interval).subscribe((res) => {
       this.chartOptions = {
         ...this.baseChartOptions,
-        data: res,
+        data: res.values.map((value) => ({
+          ...value,
+          close: parseFloat(value.close),
+          datetime: DateTime.fromSQL(value.datetime).toMillis(),
+        })),
       };
     });
   }

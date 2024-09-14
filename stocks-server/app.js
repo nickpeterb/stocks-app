@@ -49,7 +49,7 @@ app.get("/time-series", async (req, res) => {
     hour: "1h",
     day: "1day",
     week: "1week",
-    month: "month",
+    month: "1month",
   };
   if (!(req.query.interval in intervals)) res.status(400).send("Invalid interval");
 

@@ -10,6 +10,7 @@ import { TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { debounceTime, Observable, of, startWith, Subject, switchMap } from 'rxjs';
 import { TwelveStockInfo } from '../../models/twelve-data.types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticker-search',
@@ -36,9 +37,15 @@ export class TickerSearchComponent {
 
   @Output() tickerSelected = new EventEmitter<TwelveStockInfo>();
 
-  constructor(private backendService: BackendService) {
+  constructor(
+    private backendService: BackendService,
+    private router: Router
+  ) {
     this.selectedTicker.valueChanges.pipe(takeUntilDestroyed()).subscribe((ticker) => {
-      if (ticker) this.tickerSelected.emit(ticker);
+      if (ticker) {
+        this.tickerSelected.emit(ticker);
+        this.router.navigate(['ticker', ticker?.symbol]);
+      }
     });
   }
 

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TimeSeriesInterval, TimeSeriesPoint } from '../models/time-series.types';
-import { TwelveStockInfo } from '../models/twelve-data.types';
+import { TwelveStockInfo, TwelveStockPriceResp } from '../models/twelve-data.types';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +20,18 @@ export class BackendService {
       }),
     };
     return this.http.get<TwelveStockInfo[]>(this.API_URL + '/stocks', options);
+  }
+
+  getStockTimeSeries(ticker: string, interval: string) {
+    const options = {
+      params: new HttpParams({
+        fromObject: {
+          ticker,
+          interval,
+        },
+      }),
+    };
+    return this.http.get<TwelveStockPriceResp>(this.API_URL + '/time-series', options);
   }
 
   getRandomTimeSeries(

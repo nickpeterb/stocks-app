@@ -3,4 +3,4 @@ export interface TimeSeriesPoint {
   value: number;
 }
 
-export type TimeSeriesInterval = 'minute' | 'day' | 'week' | 'month';
+export type TimeSeriesInterval = 'minute' | 'hour' | 'day' | 'week' | 'month';
