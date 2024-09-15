@@ -1,6 +1,21 @@
 @if (ticker$ | async; as ticker) {
-  <div id="header">
+  <div class="header">
     <div style="font-size: 1.5rem">{{ ticker }}</div>
+
+    @if (dashboardTickers$ | async; as dashTickers) {
+      @let icon = dashTickers.has(ticker) ? "bookmark-x" : "bookmark-plus";
+      @let hint = dashTickers.has(ticker) ? " Remove from" : "Add to";
+      @let color = dashTickers.has(ticker) ? "destructive" : "primary";
+      <button
+        [appearance]="color"
+        [iconStart]="icon"
+        (click)="handleDashboardBtn(ticker)"
+        [tuiHint]="hint + ' dashboard'"
+        size="s"
+        tuiIconButton
+        type="button"
+      ></button>
+    }
 
     <div style="flex-grow: 1"></div>
 

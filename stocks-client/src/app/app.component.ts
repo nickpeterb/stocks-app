@@ -1,6 +1,6 @@
 import { TuiButton, TuiRoot } from '@taiga-ui/core';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../services/theme.service';
 import { AsyncPipe } from '@angular/common';
 import { TickerSearchComponent } from '../components/ticker-search/ticker-search.component';
@@ -17,9 +17,16 @@ export class AppComponent {
 
   theme$ = this.themeService.theme$;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(
+    private themeService: ThemeService,
+    private router: Router
+  ) {}
 
   toggleTheme() {
     this.themeService.toggleTheme();
+  }
+
+  goToDashboard() {
+    this.router.navigateByUrl('/dashboard');
   }
 }

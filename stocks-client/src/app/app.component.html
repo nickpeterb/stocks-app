@@ -1,7 +1,9 @@
 <tui-root [attr.tuiTheme]="theme$ | async">
-  <div style="display: flex; align-items: center; padding: 1rem">
-    <div style="font-size: 1.5rem; font-weight: bold">Stocks App</div>
+  <div id="navbar">
+    <div id="title" (click)="goToDashboard()">Stocks App</div>
+
     <div style="flex-grow: 1"></div>
+
     <div>
       @let icon = (theme$ | async) === "light" ? "@tui.moon" : "@tui.sun";
       <button
@@ -15,6 +17,7 @@
       ></button>
     </div>
   </div>
+
   <div id="main-content">
     <div style="margin-bottom: 2rem">
       <app-ticker-search />

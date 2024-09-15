@@ -64,7 +64,10 @@ app.get("/time-series", async (req, res) => {
   };
 
   const response = await fetch(url, options);
+  if (response.status === 429) res.status(429).send("You've reached your API request limits");
   const result = await response.json();
+
+  if (!result.values) res.status(500).send("Internal error: No data");
 
   // Map values to numbers
   result.values = result.values.map((value) => ({

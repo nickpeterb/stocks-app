@@ -1,22 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartComponent } from '../chart/chart.component';
-import { BackendService } from '../../services/backend.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TickerSearchComponent } from '../ticker-search/ticker-search.component';
+import { MiniChartComponent } from '../mini-chart/mini-chart.component';
+import { Router } from '@angular/router';
+import { DashboardService } from '../../services/dashboard.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ChartComponent, ReactiveFormsModule, TickerSearchComponent, ChartComponent],
+  imports: [ChartComponent, ReactiveFormsModule, TickerSearchComponent, MiniChartComponent, AsyncPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  dashboardTickers: string[] = [];
+  dashboardTickers$ = this.dashboardService.savedTickers$;
 
-  constructor(private backendService: BackendService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
+
+  goToTickerInfo(ticker: string) {
+    this.router.navigate(['ticker', ticker]);
+  }
 
   /*
   TODO
