@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TuiButton, TuiGroup } from '@taiga-ui/core';
 import { TimeSeriesInterval } from '../../models/time-series.types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-ticker-info',
   standalone: true,
-  imports: [ChartComponent, TuiGroup, TuiButton],
+  imports: [ChartComponent, TuiGroup, TuiButton, TableComponent],
   templateUrl: './ticker-info.component.html',
   styleUrl: './ticker-info.component.scss',
 })

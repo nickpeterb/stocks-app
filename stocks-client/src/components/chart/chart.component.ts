@@ -8,11 +8,12 @@ import { DateTime } from 'luxon';
 import { BackendService } from '../../services/backend.service';
 import { ThemeService } from '../../services/theme.service';
 import { TimeSeriesInterval } from '../../models/time-series.types';
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-chart',
   standalone: true,
-  imports: [AgCharts],
+  imports: [AgCharts, TableComponent],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
 })

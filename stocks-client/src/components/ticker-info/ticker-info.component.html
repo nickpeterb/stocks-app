@@ -1,9 +1,10 @@
 @if (ticker) {
-  <div style="display: flex">
+  <div style="display: flex; align-items: center; margin-bottom: 0.5rem">
     <div style="font-size: 1.5rem">{{ ticker }}</div>
 
     <div style="flex-grow: 1"></div>
 
+    <div style="margin-right: 0.5rem">Interval:</div>
     <div tuiGroup class="group" [collapsed]="true" style="width: 17rem">
       @for (interval of intervals; track $index) {
         @let appearance = interval === currInterval ? "primary" : "outline";
@@ -21,7 +22,9 @@
     </div>
   </div>
 
-  <app-chart [ticker]="ticker" [interval]="currInterval"></app-chart>
+  <div>
+    <app-chart [ticker]="ticker" [interval]="currInterval"></app-chart>
+  </div>
 } @else {
   <div style="color: red">Error: No ticker provided</div>
 }
