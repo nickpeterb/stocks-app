@@ -20,12 +20,12 @@ export interface StockPriceMeta {
 }
 
 export interface StockPriceValues {
-  datetime: string;
-  open: string;
-  high: string;
-  low: string;
-  close: string;
-  volume: string;
+  datetime: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
 }
 
 export interface TwelveStockPriceResp {

@@ -1,15 +1,14 @@
-@if (ticker) {
-  <div style="display: flex; align-items: center; margin-bottom: 0.5rem">
+@if (ticker$ | async; as ticker) {
+  <div id="header">
     <div style="font-size: 1.5rem">{{ ticker }}</div>
 
     <div style="flex-grow: 1"></div>
 
-    <div style="margin-right: 0.5rem">Interval:</div>
-    <div tuiGroup class="group" [collapsed]="true" style="width: 17rem">
+    <div tuiGroup class="group" [collapsed]="true">
       @for (interval of intervals; track $index) {
-        @let appearance = interval === currInterval ? "primary" : "outline";
+        @let appearance = interval === interval$.value ? "primary" : "outline";
         <button
-          (click)="selectInterval(interval)"
+          (click)="interval$.next(interval)"
           [appearance]="appearance"
           size="s"
           tuiButton
@@ -22,9 +21,15 @@
     </div>
   </div>
 
-  <div>
-    <app-chart [ticker]="ticker" [interval]="currInterval"></app-chart>
-  </div>
+  @if (data$ | async; as data) {
+    <div id="chart-container">
+      <app-chart [data]="data.values"></app-chart>
+    </div>
+
+    <div id="table-container">
+      <app-table [data]="data.values"></app-table>
+    </div>
+  }
 } @else {
   <div style="color: red">Error: No ticker provided</div>
 }

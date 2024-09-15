@@ -10,7 +10,9 @@
     </tr>
     @for (item of data; track $index) {
       <tr class="tui-table__tr tui-table__tr_border_none">
-        <td class="tui-table__td tui-table__td_first">{{ item.datetime | date: "short" }}</td>
+        <td class="tui-table__td tui-table__td_first" style="white-space: nowrap">
+          {{ item.datetime | date: "M/d/yy, H:mm" }}
+        </td>
         <td class="tui-table__td">{{ item.open | currency }}</td>
         <td class="tui-table__td close-price">{{ item.close | currency }}</td>
         <td class="tui-table__td high-price">{{ item.high | currency }}</td>

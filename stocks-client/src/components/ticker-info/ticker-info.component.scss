@@ -1,0 +1,20 @@
+#header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.group {
+  width: 17rem;
+}
+
+#chart-container {
+  border: 1px solid grey;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+#table-container {
+  padding: 0 1rem;
+  overflow: auto;
+}

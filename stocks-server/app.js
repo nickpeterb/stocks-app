@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { genRandomTSData } from "./randomData.js";
+import { DateTime } from "luxon";
 
 const app = express();
 app.use(cors({ origin: ["http://localhost:4200"] }));
@@ -63,9 +64,19 @@ app.get("/time-series", async (req, res) => {
   };
 
   const response = await fetch(url, options);
-  const json = await response.json();
+  const result = await response.json();
 
-  res.json(json);
+  // Map values to numbers
+  result.values = result.values.map((value) => ({
+    datetime: DateTime.fromSQL(value.datetime).toMillis(),
+    open: parseFloat(value.open),
+    close: parseFloat(value.close),
+    high: parseFloat(value.high),
+    low: parseFloat(value.low),
+    volume: parseFloat(value.volume),
+  }));
+
+  res.json(result);
 });
 
 const PORT = 5000;

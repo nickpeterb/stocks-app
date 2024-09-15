@@ -4,16 +4,14 @@ import { AgCharts } from 'ag-charts-angular';
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
 
-import { DateTime } from 'luxon';
-import { BackendService } from '../../services/backend.service';
 import { ThemeService } from '../../services/theme.service';
-import { TimeSeriesInterval } from '../../models/time-series.types';
-import { TableComponent } from '../table/table.component';
+import { StockPriceValues } from '../../models/twelve-data.types';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-chart',
   standalone: true,
-  imports: [AgCharts, TableComponent],
+  imports: [AgCharts],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
 })
@@ -36,32 +34,24 @@ export class ChartComponent implements OnChanges {
       {
         type: 'time',
         position: 'bottom',
-        // label: {
-        //   formatter: function (params: any) {
-        //     const date = new Date(params.value); // Convert milliseconds to Date object
-        //     return date.toLocaleDateString(); // Format as 'MM/DD/YYYY' or localized format
-        //   },
-        // },
         nice: true,
       },
       {
         type: 'number',
         position: 'left',
-        // title: { text: 'Price' },
         nice: true,
+        label: {
+          format: '$#{.2f}',
+        },
       },
     ],
   };
   chartOptions: AgChartOptions | null = null;
 
-  @Input() ticker: string | null = null;
-  @Input() interval: TimeSeriesInterval | null = null;
+  @Input() data: StockPriceValues[] = [];
 
-  constructor(
-    private backendService: BackendService,
-    private themeService: ThemeService
-  ) {
-    this.themeService.theme$.subscribe((newTheme) => {
+  constructor(private themeService: ThemeService) {
+    this.themeService.theme$.pipe(takeUntilDestroyed()).subscribe((newTheme) => {
       const agTheme = newTheme === 'light' ? 'ag-default' : 'ag-default-dark';
       this.baseChartOptions.theme = agTheme;
       this.chartOptions = {
@@ -72,19 +62,12 @@ export class ChartComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const ticker = changes['ticker']?.currentValue ?? this.ticker;
-    const interval = changes['interval']?.currentValue ?? this.interval;
-    if (!ticker || !interval) return;
+    const data: StockPriceValues[] = changes['data']?.currentValue;
+    if (!data) return;
 
-    this.backendService.getStockTimeSeries(ticker, interval).subscribe((res) => {
-      this.chartOptions = {
-        ...this.baseChartOptions,
-        data: res.values.map((value) => ({
-          ...value,
-          close: parseFloat(value.close),
-          datetime: DateTime.fromSQL(value.datetime).toMillis(),
-        })),
-      };
-    });
+    this.chartOptions = {
+      ...this.baseChartOptions,
+      data: data,
+    };
   }
 }
