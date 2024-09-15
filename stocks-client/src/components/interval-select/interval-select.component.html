@@ -1,0 +1,15 @@
+<div tuiGroup class="group" [collapsed]="true">
+  @for (interval of intervals; track $index) {
+    @let appearance = interval === selectedInterval ? "primary" : "outline";
+    <button
+      (click)="select(interval)"
+      [appearance]="appearance"
+      size="s"
+      tuiButton
+      type="button"
+      style="text-transform: capitalize"
+    >
+      {{ interval }}
+    </button>
+  }
+</div>

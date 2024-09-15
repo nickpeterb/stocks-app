@@ -6,16 +6,30 @@ import { MiniChartComponent } from '../mini-chart/mini-chart.component';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
 import { AsyncPipe } from '@angular/common';
+import { TuiButton, TuiGroup } from '@taiga-ui/core';
+import { TimeSeriesInterval } from '../../models/time-series.types';
+import { IntervalSelectComponent } from '../interval-select/interval-select.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ChartComponent, ReactiveFormsModule, TickerSearchComponent, MiniChartComponent, AsyncPipe],
+  imports: [
+    ChartComponent,
+    ReactiveFormsModule,
+    TickerSearchComponent,
+    MiniChartComponent,
+    AsyncPipe,
+    TuiGroup,
+    TuiButton,
+    IntervalSelectComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   dashboardTickers$ = this.dashboardService.savedTickers$;
+
+  interval: TimeSeriesInterval = 'hour';
 
   constructor(
     private dashboardService: DashboardService,

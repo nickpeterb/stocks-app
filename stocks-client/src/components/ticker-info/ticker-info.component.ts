@@ -9,18 +9,18 @@ import { BehaviorSubject, combineLatest, filter, map, mergeMap } from 'rxjs';
 import { BackendService } from '../../services/backend.service';
 import { AsyncPipe } from '@angular/common';
 import { DashboardService } from '../../services/dashboard.service';
+import { IntervalSelectComponent } from '../interval-select/interval-select.component';
 
 @Component({
   selector: 'app-ticker-info',
   standalone: true,
-  imports: [ChartComponent, TuiGroup, TuiButton, TableComponent, AsyncPipe, TuiHint],
+  imports: [ChartComponent, TuiGroup, TuiButton, TableComponent, AsyncPipe, TuiHint, IntervalSelectComponent],
   templateUrl: './ticker-info.component.html',
   styleUrl: './ticker-info.component.scss',
 })
 export class TickerInfoComponent {
   ticker$ = this.route.paramMap.pipe(map((res) => res.get('ticker')));
 
-  intervals: TimeSeriesInterval[] = ['minute', 'hour', 'day', 'week', 'month'];
   interval$ = new BehaviorSubject<TimeSeriesInterval>('hour');
 
   data$ = combineLatest([this.ticker$, this.interval$]).pipe(

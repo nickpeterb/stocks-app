@@ -38,7 +38,6 @@ app.get("/stocks", async (req, res) => {
 
   const response = await fetch(url, options);
   const json = await response.json();
-  // const result = json.data.map((entry) => ({ ticker: entry.symbol, name: entry.name }));
 
   res.json(json.data);
 });
@@ -64,10 +63,16 @@ app.get("/time-series", async (req, res) => {
   };
 
   const response = await fetch(url, options);
-  if (response.status === 429) res.status(429).send("You've reached your API request limits");
+  if (response.status === 429) {
+    res.status(429).send("You've reached your API request limits");
+    return;
+  }
   const result = await response.json();
 
-  if (!result.values) res.status(500).send("Internal error: No data");
+  if (!result.values) {
+    res.status(500).send("Internal error: No data");
+    return;
+  }
 
   // Map values to numbers
   result.values = result.values.map((value) => ({

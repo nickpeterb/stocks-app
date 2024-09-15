@@ -19,21 +19,7 @@
 
     <div style="flex-grow: 1"></div>
 
-    <div tuiGroup class="group" [collapsed]="true">
-      @for (interval of intervals; track $index) {
-        @let appearance = interval === interval$.value ? "primary" : "outline";
-        <button
-          (click)="interval$.next(interval)"
-          [appearance]="appearance"
-          size="s"
-          tuiButton
-          type="button"
-          style="text-transform: capitalize"
-        >
-          {{ interval }}
-        </button>
-      }
-    </div>
+    <app-interval-select (intervalSelected)="interval$.next($event)" />
   </div>
 
   @if (data$ | async; as data) {
