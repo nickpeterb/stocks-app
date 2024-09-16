@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ChartComponent } from '../chart/chart.component';
 import { ActivatedRoute } from '@angular/router';
 import { TuiButton, TuiGroup, TuiHint } from '@taiga-ui/core';
@@ -28,7 +28,7 @@ import { WebsocketService } from '../../services/websocket.service';
   templateUrl: './ticker-info.component.html',
   styleUrl: './ticker-info.component.scss',
 })
-export class TickerInfoComponent implements OnInit {
+export class TickerInfoComponent implements OnDestroy {
   ticker$ = this.route.paramMap.pipe(map((res) => res.get('ticker')));
 
   interval$ = new BehaviorSubject<TimeSeriesInterval>('hour');
@@ -64,12 +64,14 @@ export class TickerInfoComponent implements OnInit {
         priceElem?.classList.add('flash');
         setTimeout(() => priceElem?.classList.remove('flash'), 1000);
       });
-  }
 
-  ngOnInit(): void {
-    this.ticker$.subscribe((ticker) => {
+    this.ticker$.pipe(takeUntilDestroyed()).subscribe((ticker) => {
       if (ticker) this.websocketService.subscribeToStock(ticker);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.websocketService.closeConnection();
   }
 
   handleDashboardBtn(ticker: string) {

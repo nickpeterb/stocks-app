@@ -1,10 +1,12 @@
-<div id="header">
-  <h2 style="margin-top: 0">Dashboard</h2>
-
-  <app-interval-select (intervalSelected)="interval = $event" />
-</div>
-
 @if (dashboardTickers$ | async; as dashTickers) {
+  <div id="header">
+    <h2 style="margin-top: 0">Dashboard</h2>
+
+    @if (dashTickers.size > 0) {
+      <app-interval-select (intervalSelected)="interval = $event" />
+    }
+  </div>
+
   @if (dashTickers.size === 0) {
     <div style="text-align: center">Add stocks to your dashboard to view them here :)</div>
   }

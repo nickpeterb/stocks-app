@@ -7,13 +7,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class WebsocketService {
-  private wsSubject: WebSocketSubject<any> = webSocket('ws://localhost:5001'); // Replace with your WebSocket server URL
+  private wsSubject: WebSocketSubject<any> = webSocket('ws://localhost:5001');
   stockUpdates$: Observable<TwelvePriceUpdate> = this.wsSubject.asObservable();
 
   constructor() {}
 
   subscribeToStock(symbol: string): void {
+    console.log('subscribeToStock', symbol);
     this.wsSubject.next({ action: 'subscribe', symbol: symbol });
+  }
+
+  unsubscribeFromStock(symbol: string): void {
+    this.wsSubject.next({ action: 'unsubscribe', symbol: symbol });
   }
 
   closeConnection(): void {

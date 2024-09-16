@@ -8,9 +8,9 @@ import { AsyncPipe } from '@angular/common';
 import { TuiLet } from '@taiga-ui/cdk/directives/let';
 import { TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { debounceTime, Observable, of, startWith, Subject, switchMap } from 'rxjs';
-import { TwelveStockInfo } from '../../models/twelve-data.types';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { TwelveSearchResult } from '../../models/twelve-data.types';
 
 @Component({
   selector: 'app-ticker-search',
@@ -30,12 +30,12 @@ import { Router } from '@angular/router';
   styleUrl: './ticker-search.component.scss',
 })
 export class TickerSearchComponent {
-  selectedTicker = new FormControl<TwelveStockInfo | null>(null);
+  selectedTicker = new FormControl<TwelveSearchResult | null>(null);
   tickerSearchQuery = '';
   allTickers: string[] = ['random', 'AAPL', 'MSFT', 'GOOG'];
   searchResults: { name: string }[] = [];
 
-  @Output() tickerSelected = new EventEmitter<TwelveStockInfo>();
+  @Output() tickerSelected = new EventEmitter<TwelveSearchResult>();
 
   constructor(
     private backendService: BackendService,
@@ -51,11 +51,11 @@ export class TickerSearchComponent {
 
   search$ = new Subject<string | null>();
 
-  items$: Observable<TwelveStockInfo[]> = this.search$.pipe(
+  items$: Observable<TwelveSearchResult[]> = this.search$.pipe(
     debounceTime(200),
     switchMap((query) => {
       if (!query) return of([]);
-      return this.backendService.getStockList(query);
+      return this.backendService.searchSymbols(query);
     }),
     startWith([])
   );
@@ -64,5 +64,5 @@ export class TickerSearchComponent {
     this.search$.next(query);
   }
 
-  stringify = (item: { name: string; symbol: string }): string => `${item.symbol} - ${item.name}`;
+  stringify = (item: TwelveSearchResult): string => `${item.symbol} - ${item.instrument_name}`;
 }

@@ -1,12 +1,12 @@
-export interface TwelveStockInfo {
+export interface TwelveSearchResult {
+  symbol: string;
+  instrument_name: string;
+  exchange: string;
+  mic_code: string;
+  exchange_timezone: string;
+  instrument_type: string;
   country: string;
   currency: string;
-  exchange: string;
-  figi_code: string;
-  mic_code: string;
-  name: string;
-  symbol: string;
-  type: string;
 }
 
 export interface StockPriceMeta {

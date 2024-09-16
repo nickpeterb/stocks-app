@@ -27,13 +27,11 @@ app.get("/random-time-series", (req, res) => {
   res.json(result);
 });
 
-app.get("/stocks", async (req, res) => {
-  // TODO: Maybe run a cron job to save the output of this once a day in a database somwhere
-  // so then I can do fast queries without using up a lot of api credits
+app.get("/search", async (req, res) => {
   const symbol = req.query.ticker;
 
   // TODO: Remove country filter and add country flag in search results to distinguish them
-  const url = "https://api.twelvedata.com/stocks?" + new URLSearchParams({ symbol, country: "United States" });
+  const url = "https://api.twelvedata.com/symbol_search?" + new URLSearchParams({ symbol });
   const options = {
     method: "GET",
     headers: TWELVE_HEADERS,
@@ -42,7 +40,9 @@ app.get("/stocks", async (req, res) => {
   const response = await fetch(url, options);
   const json = await response.json();
 
-  res.json(json.data);
+  const filtered = json.data.filter((result) => result.country === "United States" || result.country === "");
+
+  res.json(filtered);
 });
 
 app.get("/time-series", async (req, res) => {
