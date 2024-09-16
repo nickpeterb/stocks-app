@@ -7,13 +7,19 @@
   gap: 1.5rem;
 }
 
+.price {
+  transition: color 500ms ease;
+}
+
+.flash {
+  color: #4caf50;
+}
+
 .group {
   width: 17rem;
 }
 
 #chart-container {
-  //   border: 1px solid grey;
-  //   border-radius: 0.75rem;
   margin-bottom: 1rem;
 }
 

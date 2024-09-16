@@ -32,3 +32,17 @@ export interface TwelveStockPriceResp {
   meta: StockPriceMeta;
   values: StockPriceValues[];
 }
+
+export interface TwelvePriceUpdate {
+  event: string;
+  symbol: string;
+  currency_base: string;
+  currency_quote: string;
+  exchange: string;
+  type: string;
+  timestamp: number;
+  price: number;
+  bid: number;
+  ask: number;
+  day_volume: number;
+}

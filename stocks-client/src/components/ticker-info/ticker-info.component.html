@@ -1,6 +1,8 @@
 @if (ticker$ | async; as ticker) {
   <div class="header">
-    <div style="font-size: 1.5rem">{{ ticker }}</div>
+    <div style="font-size: 1.5rem">
+      {{ ticker }} - <span class="price" [id]="'price-' + ticker">{{ currentPrice | currency }}</span>
+    </div>
 
     @if (dashboardTickers$ | async; as dashTickers) {
       @let icon = dashTickers.has(ticker) ? "bookmark-x" : "bookmark-plus";

@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { AgChartOptions } from 'ag-charts-community';
 import { AgCharts } from 'ag-charts-angular';
 import { ThemeService } from '../../services/theme.service';
@@ -16,6 +16,8 @@ import { TimeSeriesInterval } from '../../models/time-series.types';
 export class MiniChartComponent {
   baseChartOptions: AgChartOptions = {
     theme: 'ag-default',
+    height: 200,
+    width: 300,
     background: { visible: false },
     series: [
       {
@@ -26,18 +28,19 @@ export class MiniChartComponent {
         interpolation: {
           type: 'smooth',
         },
+        marker: {
+          enabled: false,
+        },
       },
     ],
     axes: [
       {
         type: 'time',
         position: 'bottom',
-        nice: true,
       },
       {
         type: 'number',
         position: 'left',
-        nice: true,
       },
     ],
   };
@@ -45,6 +48,8 @@ export class MiniChartComponent {
 
   @Input() ticker: string | null = null;
   @Input() interval: TimeSeriesInterval | null = null;
+
+  @Output() lastPrice = new EventEmitter<number>();
 
   constructor(
     private themeService: ThemeService,
@@ -70,6 +75,7 @@ export class MiniChartComponent {
         ...this.baseChartOptions,
         data: res.values,
       };
+      this.lastPrice.next(res.values[0].close);
     });
   }
 }

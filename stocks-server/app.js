@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { genRandomTSData } from "./randomData.js";
 import { DateTime } from "luxon";
+import { startWebSocketConnection } from "./webSockets.js";
 
 const app = express();
 app.use(cors({ origin: ["http://localhost:4200"] }));
@@ -10,6 +11,8 @@ const TWELVE_HEADERS = {
   Accept: "application/json",
   Authorization: "apikey " + process.env.TWELVE_API_KEY,
 };
+
+/* --- API ROUTES --- */
 
 app.get("/random-time-series", (req, res) => {
   const startDate = parseInt(req.query.startDate);
@@ -87,8 +90,15 @@ app.get("/time-series", async (req, res) => {
   res.json(result);
 });
 
+/* --- REGISTER LISTENER --- */
+
 const PORT = 5000;
 app.listen(PORT, (error) => {
-  if (!error) console.log("Listening on port " + PORT);
+  if (!error) console.log("API server running on http://localhost:" + PORT);
   else console.log(error);
 });
+
+/* --- WEBSOCKET --- */
+
+const wsPORT = 5001;
+startWebSocketConnection(wsPORT);
